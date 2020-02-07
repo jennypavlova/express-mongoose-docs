@@ -18,7 +18,6 @@
             $http.get('../api-docs').success((data) => {
                 $scope.routes = data.routes;
                 $scope.schemas = data.schemas;
-                $scope.baseUrl = data.baseUrl;
             });
         });
     </script>
@@ -30,9 +29,6 @@
 
     <tabset justified="false">
         <tab heading="Routes">
-            <div>
-                <p>Base Route: {{route.baseUrl}}</p>
-            </div>
 
             <!-- Sidebar -->
             <div class="col-xs-6 col-sm-2 sidebar-offcanvas sidebar" role="navigation">
@@ -54,13 +50,11 @@
                             <thead>
                             <th style="width: 100px;">Method</th>
                             <th>Path</th>
-                            <th>URL</th>
                             </thead>
                             <tbody>
                             <tr ng-repeat="route in group[1] | orderBy:'path'">
                                 <td>{{route.method}}</td>
                                 <td>{{route.path}}</td>
-                                <td>{{route.baseUrl}}</td>
                             </tr>
                             </tbody>
                         </table>
