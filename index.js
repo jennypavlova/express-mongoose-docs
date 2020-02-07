@@ -1,11 +1,11 @@
 var _ = require("underscore");
 var express = require("express");
 
-module.exports = function (app, mongoose) {
+module.exports =  (app, mongoose, router) => {
 
 
     // Add an API endpoint to be used internally by this module
-    app.get('/api-docs', function (req, res) {
+    app.get('/api-docs',  (req, res) => {
         try {
             if (app.routes) {
                 // Extract all API routes in one array  in case of express3
@@ -14,7 +14,7 @@ module.exports = function (app, mongoose) {
             else {
                 // Extract all API routes in one array  in case of express4
                 var arr = [];
-                _.each(app._router.stack, function (route) {
+                _.each(router.stack, (route) => {
                     if (!_.isUndefined(route.route)) {
                         route.route.method = Object.keys(route.route.methods).toString();
                         arr.push(route.route);
@@ -28,10 +28,25 @@ module.exports = function (app, mongoose) {
                         });
                     }
                 });
+                // Extract all API routes in one array in case of express router
+                _.each(app._router.stack, (route) => {
+                    if (!_.isUndefined(route.route)) {
+                        route.route.method = Object.keys(route.route.methods).toString();
+                        arr.push(route.route);
+                    } else if(route.handle.stack) {
+                        // Extract routes from middlewere installed Router
+                        _.each(route.handle.stack, (route) => {
+                            if (!_.isUndefined(route.route)) {
+                                route.route.method = Object.keys(route.route.methods).toString();
+                                arr.push(route.route);
+                            }
+                        });
+                    }
+                });
                 routes = arr;
             }
             // Group routes by resource name
-            routes = _.groupBy(routes, function (route) {
+            routes = _.groupBy(routes, (route) => {
                 return route.path.split("/")[1];
             });
 
@@ -46,7 +61,7 @@ module.exports = function (app, mongoose) {
             if (mongoose)
                 schemas = generateSchemaDocs(mongoose);
 
-            res.send({routes: routes, schemas: schemas});
+                res.status(200).send({routes: routes, schemas: schemas});
         } catch (e) {
             res.send(400,e);
         }
