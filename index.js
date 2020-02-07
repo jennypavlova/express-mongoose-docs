@@ -1,7 +1,7 @@
 var _ = require("underscore");
 var express = require("express");
 
-module.exports =  (app, mongoose, router) => {
+module.exports =  (app, mongoose, router, baseUrl) => {
 
 
     // Add an API endpoint to be used internally by this module
@@ -61,7 +61,7 @@ module.exports =  (app, mongoose, router) => {
             if (mongoose)
                 schemas = generateSchemaDocs(mongoose);
 
-                res.status(200).send({routes: routes, schemas: schemas});
+                res.status(200).send({routes: routes, schemas: schemas, baseUrl:baseUrl});
         } catch (e) {
             res.send(400,e);
         }
