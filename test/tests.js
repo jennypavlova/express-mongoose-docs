@@ -9,10 +9,11 @@ var mongoose = require('mongoose');
 var request = require('supertest');
 var should = require('should');
 var docs = require("../index.js");
+var router = express.Router()
 
 var app = express();
-app.use(app.router);
-
+app.use(router);
+router
 docs(app, mongoose);
 
 var baseURL = "http://localhost:5000";
