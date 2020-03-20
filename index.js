@@ -1,9 +1,9 @@
 var _ = require("underscore");
 var express = require("express");
 
-module.exports = function(app, mongoose, router) {
+module.exports = function (app, mongoose, router) {
   // Add an API endpoint to be used internally by this module
-  app.get("/api-docs", function(req, res) {
+  app.get("/api-docs", function (req, res) {
     try {
       if (app.routes) {
         // Extract all API routes in one array  in case of express3
@@ -11,13 +11,13 @@ module.exports = function(app, mongoose, router) {
       } else {
         // Extract all API routes in one array  in case of express4
         var arr = [];
-        _.each(router.stack, function(route) {
+        _.each(router.stack, function (route) {
           if (!_.isUndefined(route.route)) {
             route.route.method = Object.keys(route.route.methods).toString();
             arr.push(route.route);
           } else if (route.handle.stack) {
             // Extract routes from middlewere installed Router
-            _.each(route.handle.stack, function(route) {
+            _.each(route.handle.stack, function (route) {
               if (!_.isUndefined(route.route)) {
                 route.route.method = Object.keys(
                   route.route.methods
@@ -28,13 +28,13 @@ module.exports = function(app, mongoose, router) {
           }
         });
         // Extract all API routes in one array in case of express router
-        _.each(app._router.stack, function(route) {
+        _.each(app._router.stack, function (route) {
           if (!_.isUndefined(route.route)) {
             route.route.method = Object.keys(route.route.methods).toString();
             arr.push(route.route);
           } else if (route.handle.stack) {
             // Extract routes from middlewere installed Router
-            _.each(route.handle.stack, function(route) {
+            _.each(route.handle.stack, function (route) {
               if (!_.isUndefined(route.route)) {
                 route.route.method = Object.keys(
                   route.route.methods
@@ -47,7 +47,7 @@ module.exports = function(app, mongoose, router) {
         routes = arr;
       }
       // Group routes by resource name
-      routes = _.groupBy(routes, function(route) {
+      routes = _.groupBy(routes, function (route) {
         return route.path.split("/")[1];
       });
 
@@ -62,7 +62,10 @@ module.exports = function(app, mongoose, router) {
       if (mongoose) schemas = generateSchemaDocs(mongoose);
       res
         .status(200)
-        .send({ routes: routes, schemas: schemas, baseUrl: baseUrl });
+        .send({
+          routes: routes,
+          schemas: schemas
+        });
     } catch (e) {
       res.send(400, e);
     }
@@ -82,7 +85,7 @@ function generateSchemaDocs(mongoose) {
   var schemas = _.pairs(mongoose.modelSchemas);
 
   // Map each schema to a readable format
-  schemas = _.map(schemas, function(schema) {
+  schemas = _.map(schemas, function (schema) {
     var info = getSchemaInfo(schema);
     return info;
   });
@@ -94,7 +97,7 @@ function generateSchemaDocs(mongoose) {
 
 function getSchemaInfo(schema) {
   // Extract schema info for all fields of a schema
-  var paths = _.map(schema[1].paths, function(path) {
+  var paths = _.map(schema[1].paths, function (path) {
     // Extract field info like type, required, enum etc.
     var info = getFieldInfo(path);
 
@@ -105,16 +108,25 @@ function getSchemaInfo(schema) {
   });
 
   // Add virtual fields to schema info
-  _.each(schema[1].virtuals, function(virtual) {
+  _.each(schema[1].virtuals, function (virtual) {
     if (virtual.path != "id")
-      paths.push({ name: virtual.path, type: "Unknown" });
+      paths.push({
+        name: virtual.path,
+        type: "Unknown"
+      });
   });
 
-  return { name: schema[0], fields: paths };
+  return {
+    name: schema[0],
+    fields: paths
+  };
 }
 
 function getFieldInfo(path) {
-  var field = { name: path.path, type: path.instance };
+  var field = {
+    name: path.path,
+    type: path.instance
+  };
 
   if (path.options.type) {
     field.type = path.options.type.name;
