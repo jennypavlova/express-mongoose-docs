@@ -36,11 +36,12 @@ Example: http://localhost:5000/api/customName/apiDocs
 Screenshots
 ===========
 
-![routes](https://raw.github.com/nabeel-ahmad/express-mongoose-docs/master/screenshots/screenshot1.png "Routes")
+![routes](https://raw.github.com/jennypavlova/express-mongoose-docs/master/screenshots/screenshot1.png "Routes")
 
-![data-model](https://raw.github.com/nabeel-ahmad/express-mongoose-docs/master/screenshots/screenshot2.png "Data Model")
+![data-model](https://raw.github.com/jennypavlova/express-mongoose-docs/master/screenshots/screenshot2.png "Data Model")
 
 
 
-[repository]:https://github.com/nabeel-ahmad/express-mongoose-docs
+[repository](https://github.com/jennypavlova/express-mongoose-docs)
+Forked from [repository](https://github.com/jennypavlova/express-mongoose-docs)
 
