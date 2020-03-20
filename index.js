@@ -1,9 +1,9 @@
 var _ = require("underscore");
 var express = require("express");
 
-module.exports = function (app, mongoose, router) {
+module.exports = function (app, mongoose, router, baseUrl) {
   // Add an API endpoint to be used internally by this module
-  app.get("/api-docs", function (req, res) {
+  app.get('/api-docs', function (req, res) {
     try {
       if (app.routes) {
         // Extract all API routes in one array  in case of express3
@@ -64,7 +64,8 @@ module.exports = function (app, mongoose, router) {
         .status(200)
         .send({
           routes: routes,
-          schemas: schemas
+          schemas: schemas,
+          baseUrl: baseUrl || '',
         });
     } catch (e) {
       res.send(400, e);
@@ -72,7 +73,7 @@ module.exports = function (app, mongoose, router) {
   });
 
   // Configure the directory which holds html docs template
-  app.use(express.static(__dirname + "/html"));
+  app.use(`${baseUrl}/`, express.static(__dirname + "/html"));
 };
 
 var nestedSchemas;
