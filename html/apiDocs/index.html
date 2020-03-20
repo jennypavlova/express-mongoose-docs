@@ -18,6 +18,7 @@
             $http.get('../api-docs').success(function (data) {
                 $scope.routes = data.routes;
                 $scope.schemas = data.schemas;
+                $scope.baseUrl = window.location.origin;
             });
         });
     </script>
@@ -41,6 +42,7 @@
 
             <!-- Content area -->
             <div class="col-xs-12 col-sm-10">
+                <h4>{{baseUrl}}</h4>
                 <ul>
                     <li id="{{group[0]}}" ng-repeat="group in routes | orderBy:'group[0]'">
 
@@ -102,7 +104,7 @@
                             <td>{{field.required}}</td>
                             <td>{{field.min}}</td>
                             <td>{{field.max}}</td>
-                            <td>{{field.enumValues}}</td>
+                            <td class='enums'>{{field.enumValues}}</td>
                         </tr>
                         </tbody>
                     </table>
